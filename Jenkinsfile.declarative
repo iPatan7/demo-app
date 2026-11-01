@@ -1,75 +1,28 @@
 // Declarative version of the same pipeline (Experiment 6, part C).
 pipeline {
     agent any
-
     tools {
         maven 'Maven3'
         jdk 'JDK25'
     }
-
     stages {
-        stage('Checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/iPatan7/demo-app.git'
-            }
-        }
-        stage('Clean') {
-            steps {
-                sh 'mvn -B clean'
-            }
-        }
-        stage('Validate') {
-            steps {
-                sh 'mvn -B validate'
-            }
-        }
-        stage('Compile') {
-            steps {
-                sh 'mvn -B compile'
-            }
-        }
-        stage('Test') {
-            steps {
-                sh 'mvn -B test'
-            }
-        }
-        stage('Package') {
-            steps {
-                sh 'mvn -B package'
-            }
-        }
-        stage('Verify') {
-            steps {
-                sh 'mvn -B verify'
-            }
-        }
-        stage('Install') {
-            steps {
-                sh 'mvn -B install'
-            }
-        }
-        stage('Site') {
-            steps {
-                sh 'mvn -B site'
-            }
-        }
-        stage('Deploy') {
-            steps {
-                sh 'mvn -B deploy'
-            }
-        }
+        stage('Checkout') { steps { git branch: 'main', url: 'https://github.com/iPatan7/demo-app.git' } }
+        stage('Clean')    { steps { sh 'mvn -B clean' } }
+        stage('Validate') { steps { sh 'mvn -B validate' } }
+        stage('Compile')  { steps { sh 'mvn -B compile' } }
+        stage('Test')     { steps { sh 'mvn -B test' } }
+        stage('Package')  { steps { sh 'mvn -B package' } }
+        stage('Verify')   { steps { sh 'mvn -B verify' } }
+        stage('Install')  { steps { sh 'mvn -B install' } }
+        stage('Site')     { steps { sh 'mvn -B site' } }
+        stage('Deploy')   { steps { sh 'mvn -B deploy' } }
     }
-
     post {
-        always {
-            junit 'target/surefire-reports/*.xml'
-        }
+        always  { junit 'target/surefire-reports/*.xml' }
         success {
             archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
             echo 'Build Successful!'
         }
-        failure {
-            echo 'Build Failed!'
-        }
+        failure { echo 'Build Failed!' }
     }
 }
